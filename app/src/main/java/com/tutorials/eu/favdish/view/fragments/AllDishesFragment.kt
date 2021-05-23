@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.tutorials.eu.favdish.R
 import com.tutorials.eu.favdish.application.FavDishApplication
 import com.tutorials.eu.favdish.databinding.FragmentAllDishesBinding
+import com.tutorials.eu.favdish.model.entities.FavDish
 import com.tutorials.eu.favdish.view.activities.AddUpdateDishActivity
+import com.tutorials.eu.favdish.view.activities.MainActivity
 import com.tutorials.eu.favdish.view.adapters.FavDishAdapter
 import com.tutorials.eu.favdish.viewmodel.FavDishViewModel
 import com.tutorials.eu.favdish.viewmodel.FavDishViewModelFactory
@@ -18,10 +21,6 @@ class AllDishesFragment : Fragment() {
 
     private lateinit var mBinding: FragmentAllDishesBinding
 
-    /**
-     * To create the ViewModel we used the viewModels delegate, passing in an instance of our FavDishViewModelFactory.
-     * This is constructed based on the repository retrieved from the FavDishApplication.
-     */
     private val mFavDishViewModel: FavDishViewModel by viewModels {
         FavDishViewModelFactory((requireActivity().application as FavDishApplication).repository)
     }
@@ -81,4 +80,19 @@ class AllDishesFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
+    fun dishDetails(dish: FavDish) {
+        findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToNavigationDishDetails(dish))
+        if (requireActivity() is MainActivity){
+            (requireActivity() as MainActivity).hideBottomNavigation()
+        }
+    }
+
+    @Override
+    override fun onResume() {
+        super.onResume()
+        if (requireActivity() is MainActivity){
+            (requireActivity() as MainActivity).showBottomNavigation()
+        }
+    }
+
 }

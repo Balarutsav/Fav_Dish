@@ -54,23 +54,14 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.*
 
-/**
- * A screen where we can add and update the dishes.
- */
 class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mBinding: ActivityAddUpdateDishBinding
 
-    // A global variable for stored image path.
     private var mImagePath: String = ""
 
-    // A global variable for the custom list dialog.
     private lateinit var mCustomListDialog: Dialog
 
-    /**
-     * To create the ViewModel we used the viewModels delegate, passing in an instance of our FavDishViewModelFactory.
-     * This is constructed based on the repository retrieved from the FavDishApplication.
-     */
     private val mFavDishViewModel: FavDishViewModel by viewModels {
         FavDishViewModelFactory((application as FavDishApplication).repository)
     }
@@ -83,13 +74,11 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
         setupActionBar()
 
-        mBinding.ivAddDishImage.setOnClickListener(this@AddUpdateDishActivity)
-
-        mBinding.etType.setOnClickListener(this@AddUpdateDishActivity)
-        mBinding.etCategory.setOnClickListener(this@AddUpdateDishActivity)
-        mBinding.etCookingTime.setOnClickListener(this@AddUpdateDishActivity)
-
-        mBinding.btnAddDish.setOnClickListener(this@AddUpdateDishActivity)
+        mBinding.ivAddDishImage.setOnClickListener(this)
+        mBinding.etType.setOnClickListener(this)
+        mBinding.etCategory.setOnClickListener(this)
+        mBinding.etCookingTime.setOnClickListener(this)
+        mBinding.btnAddDish.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -131,9 +120,6 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btn_add_dish -> {
-
-                // Define the local variables and get the EditText values.
-                // For Dish Image we have the global variable defined already.
 
                 val title = mBinding.etTitle.text.toString().trim { it <= ' ' }
                 val type = mBinding.etType.text.toString().trim { it <= ' ' }
@@ -228,20 +214,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    /**
-     * Receive the result from a previous call to
-     * {@link #startActivityForResult(Intent, int)}.  This follows the
-     * related Activity API as described there in
-     * {@link Activity#onActivityResult(int, int, Intent)}.
-     *
-     * @param requestCode The integer request code originally supplied to
-     *                    startActivityForResult(), allowing you to identify who this
-     *                    result came from.
-     * @param resultCode The integer result code returned by the child activity
-     *                   through its setResult().
-     * @param data An Intent, which can return result data to the caller
-     *               (various data can be attached to Intent "extras").
-     */
+
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -344,8 +317,6 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         val binding: DialogCustomImageSelectionBinding =
             DialogCustomImageSelectionBinding.inflate(layoutInflater)
 
-        /*Set the screen content from a layout resource.
-        The resource will be inflated, adding all top-level views to the screen.*/
         dialog.setContentView(binding.root)
 
         binding.tvCamera.setOnClickListener {
@@ -418,8 +389,6 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
             dialog.dismiss()
         }
-
-        //Start the dialog and display it on screen.
         dialog.show()
     }
 
@@ -489,40 +458,17 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         return file.absolutePath
     }
 
-    /**
-     * A function to launch the custom list dialog.
-     *
-     * @param title - Define the title at runtime according to the list items.
-     * @param itemsList - List of items to be selected.
-     * @param selection - By passing this param you can identify the list item selection.
-     */
     private fun customItemsListDialog(title: String, itemsList: List<String>, selection: String) {
         mCustomListDialog = Dialog(this@AddUpdateDishActivity)
-
         val binding: DialogCustomListBinding = DialogCustomListBinding.inflate(layoutInflater)
-
-        /*Set the screen content from a layout resource.
-        The resource will be inflated, adding all top-level views to the screen.*/
         mCustomListDialog.setContentView(binding.root)
-
         binding.tvTitle.text = title
-
-        // Set the LayoutManager that this RecyclerView will use.
         binding.rvList.layoutManager = LinearLayoutManager(this@AddUpdateDishActivity)
-        // Adapter class is initialized and list is passed in the param.
         val adapter = CustomListItemAdapter(this@AddUpdateDishActivity, itemsList, selection)
-        // adapter instance is set to the recyclerview to inflate the items.
         binding.rvList.adapter = adapter
-        //Start the dialog and display it on screen.
         mCustomListDialog.show()
     }
 
-    /**
-     * A function to set the selected item to the view.
-     *
-     * @param item - Selected Item.
-     * @param selection - Identify the selection and set it to the view accordingly.
-     */
     fun selectedListItem(item: String, selection: String) {
 
         when (selection) {
