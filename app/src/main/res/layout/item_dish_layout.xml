@@ -15,6 +15,9 @@
 
         <!--The "tools" param is used to show the text only in the designing view
  it will not be displayed once you run the app.-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_dish_image"
@@ -24,6 +27,17 @@
                 android:contentDescription="@string/image_contentDescription"
                 android:scaleType="fitXY"
                 tools:src="@mipmap/ic_launcher" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_margin="5dp"
+                android:id="@+id/ivMenu"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_baseline_more"
+                android:layout_gravity="end|top"
+                android:tint="@color/black"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/image_contentDescription"
+                android:layout_height="wrap_content"/>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tv_dish_title"

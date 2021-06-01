@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
-import com.tutorials.eu.favdish.R
 import com.tutorials.eu.favdish.application.FavDishApplication
 import com.tutorials.eu.favdish.databinding.FragmentFavoriteDishesBinding
 import com.tutorials.eu.favdish.model.entities.FavDish

@@ -13,6 +13,8 @@
 
     <string name="action_add_dish">Add Dish</string>
 
+    <string name="action_edit_dish">Edit Dish</string>
+
     <string name="image_contentDescription">image</string>
 
     <string name="lbl_title">Title</string>
@@ -65,6 +67,12 @@
 
     <string name="msg_added_to_unfav">Add To UnFavourite</string>
     <string name="no_favorite_dishes_added_yet">No favorite dishes added yet!!!</string>
+    <string name="delete_dish">Delete dish</string>
+    <string name="lbl_update_dish">Update Dish</string>
+    <string name="title_delete_dish">Delete Dish</string>
+    <string name="msg_delete_dialog" >Are you sure you wants to delete %1$s.</string>
+    <string name="lbl_yes" >Yes</string>
+    <string name="lbl_no" >No</string>
 
     <!--END-->
 

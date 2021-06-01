@@ -19,14 +19,23 @@ class FavDishViewModel(private val repository: FavDishRepository) : ViewModel() 
         // Call the repository function and pass the details.
         repository.insertFavDishData(dish)
     }
+
     val allDishesList: LiveData<List<FavDish>> = repository.allDishesList.asLiveData()
-    fun update(dish:FavDish)=viewModelScope.launch {
+    fun update(dish: FavDish) = viewModelScope.launch {
         repository.updateFavDishDetails(dish)
     }
-    val favList: LiveData<List<FavDish>> =repository.favList.asLiveData()
+
+    val favList: LiveData<List<FavDish>> = repository.favList.asLiveData()
+    fun delete(dish: FavDish) = viewModelScope.launch {
+        repository.deleteFavDish(dish)
+    }
+
+    fun getFilterList(value: String): LiveData<List<FavDish>> =
+            repository.getFilterList(value).asLiveData()
 }
 
-class FavDishViewModelFactory(private val repository: FavDishRepository) : ViewModelProvider.Factory {
+class FavDishViewModelFactory(private val repository: FavDishRepository) :
+    ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FavDishViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

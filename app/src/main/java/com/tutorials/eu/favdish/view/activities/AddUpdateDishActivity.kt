@@ -61,7 +61,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     private var mImagePath: String = ""
 
     private lateinit var mCustomListDialog: Dialog
-
+    private var mFavDetails: FavDish? = null
     private val mFavDishViewModel: FavDishViewModel by viewModels {
         FavDishViewModelFactory((application as FavDishApplication).repository)
     }
@@ -71,7 +71,9 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
         mBinding = ActivityAddUpdateDishBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-
+        if (intent.hasExtra(Constants.EXTRA_DISH_DETAILS)) {
+            mFavDetails = intent.getParcelableExtra(Constants.EXTRA_DISH_DETAILS)
+        }
         setupActionBar()
 
         mBinding.ivAddDishImage.setOnClickListener(this)
@@ -183,26 +185,42 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                         ).show()
                     }
                     else -> {
-
+                        var id: Int = 0
+                        var isFav: Boolean = false
+                        var imageSource = Constants.DISH_IMAGE_SOURCE_LOCAL
+                        mFavDetails?.let {
+                            id = it.id
+                            isFav = it.favoriteDish
+                            imageSource = it.imageSource
+                        }
                         val favDishDetails: FavDish = FavDish(
                             mImagePath,
-                            Constants.DISH_IMAGE_SOURCE_LOCAL,
+                            imageSource,
                             title,
                             type,
                             category,
                             ingredients,
                             cookingTimeInMinutes,
                             cookingDirection,
-                            false
+                            isFav, id
                         )
 
-                        mFavDishViewModel.insert(favDishDetails)
+                        if (id == 0) {
+                            mFavDishViewModel.insert(favDishDetails)
 
-                        Toast.makeText(
-                            this@AddUpdateDishActivity,
-                            "You successfully added your favorite dish details.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                "You successfully added your favorite dish details.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            mFavDishViewModel.update(favDishDetails)
+                            Toast.makeText(
+                                this@AddUpdateDishActivity,
+                                "You successfully update your favorite dish details.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
                         // You even print the log if Toast is not displayed on emulator
                         Log.e("Insertion", "Success")
@@ -305,6 +323,20 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 
         mBinding.toolbarAddDishActivity.setNavigationOnClickListener { onBackPressed() }
+        mFavDetails?.let {
+            mImagePath = it.image
+            Glide.with(this@AddUpdateDishActivity).load(mImagePath).centerCrop()
+                .into(mBinding.ivDishImage)
+            mBinding.etTitle.setText(mFavDetails!!.title)
+            mBinding.etType.setText(mFavDetails!!.type)
+            mBinding.etCategory.setText(mFavDetails!!.category)
+            mBinding.etIngredients.setText(mFavDetails!!.ingredients)
+            mBinding.etCookingTime.setText(mFavDetails!!.cookingTime)
+            mBinding.etDirectionToCook.setText(mFavDetails!!.directionToCook)
+            mBinding.btnAddDish.text = resources.getString(R.string.lbl_update_dish)
+        }
+
+
     }
 
 
@@ -496,4 +528,5 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
 
         private const val IMAGE_DIRECTORY = "FavDishImages"
     }
+
 }
